@@ -1,0 +1,9 @@
+**/ENV/
+**/__pycache__
+
+**/!requirements!.txt
+
+.idea
+
+
+
