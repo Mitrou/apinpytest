@@ -17,6 +17,14 @@ LAST_NAMES = ('benin', 'rosman', 'krudo', 'shemlin', 'lord', 'sams')
 SENIORITY = ('junior', 'middle', 'profi', 'advanced', 'guru')
 POSITIONS = ('tester', 'automation', 'developer', 'admin')
 
+# TODO negatives:
+# field types
+# field length
+# blank post
+# +1 to blank till actual
+# +1 above actual
+# +10 above actual
+
 
 # test API_m1.py
 def test_data(self):
