@@ -25,6 +25,15 @@ POSITIONS = ('tester', 'automation', 'developer', 'admin')
 # +1 above actual
 # +10 above actual
 
+# TODO data/scenarios
+# POS 5 valid bodies for parametrization
+# NEG blank body
+# NEG 2 one item body
+# NEG 2 with INT for each element
+# NEG 2 with special symbols for each element
+# NEG 2 with 10k string for each element
+# NEG 1 10 elements in body
+
 
 # test API_m1.py
 def test_data(self):
