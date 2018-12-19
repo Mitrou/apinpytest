@@ -57,13 +57,14 @@ def json_body_generator(arg):
     return request_body
 
 
-def check_get_all_and_existing_data():
+def test_check_get_all_and_existing_data():
     global list_of_existing_ids
     list_of_existing_ids = []
     get_p_responce = requests.get(base_url)
     json_to_operate = get_p_responce.json()['candidates']
     for i in json_to_operate:
         list_of_existing_ids.append(i['id'])
+    assert True
 
 def test_data_are_valid():
     to_test = json_body_generator("POS")
