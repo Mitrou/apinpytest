@@ -21,10 +21,9 @@ SENIORITY = ('junior', 'middle', 'senior', 'tech lead')
 POSITIONS = ('tester', 'dev-ops', 'developer', 'admin')
 empty_str = ''
 base_url = 'http://qainterview.cogniance.com/candidates'
-list_of_existing_ids = []
-list_of_updated_ids = []
 
-@pytest.fixture()
+
+
 def json_body_generator(arg):
     thousand_chars_str = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(10000)])
     ten_chars_spec_symbols = ''.join([random.choice(string.punctuation) for n in range(10)])
@@ -57,8 +56,10 @@ def json_body_generator(arg):
         request_body = '{"name": "value1", "position": "value1", "key3": "value3"}'
     return request_body
 
-@pytest.fixture()
+
 def check_get_all_and_existing_data():
+    global list_of_existing_ids
+    list_of_existing_ids = []
     get_p_responce = requests.get(base_url)
     json_to_operate = get_p_responce.json()['candidates']
     for i in json_to_operate:
@@ -77,14 +78,45 @@ def test_api_post_positive_status_code():
     positive_post_body = json_body_generator('POS')
     post_p_responce = requests.post(base_url, data = positive_post_body, headers=correct_header)
     status_code_to_test = post_p_responce.status_code
-    json_to_operate_in_post = post_p_responce.json()['candidates']
+    global json_to_operate_in_post
+    global posted_id
+    json_to_operate_in_post = post_p_responce.json()['candidate']
     posted_id = json_to_operate_in_post.get('id')
     assert status_code_to_test == ADDED
 
-def test_api_post_positive_crosscheck_by_get():
+def test_api_post_positive_crosscheck_by_get_ids():
     get_p_responce = requests.get(base_url)
     json_to_operate = get_p_responce.json()['candidates']
-    assert status_code_to_test == SUCCESS
+    a = dict(json_to_operate[-1]).get('id')
+    b =  posted_id
+    print(a)
+    assert a == b
+
+def test_api_post_positive_crosscheck_by_get_values():
+    get_p_responce = requests.get(base_url)
+    json_to_operate = get_p_responce.json()['candidates']
+    a = dict(json_to_operate[-1])
+    b =  json_to_operate_in_post
+    assert a == b
+
+def test_delete_pos_status_code():
+    del_errors = []
+    del_p_responce = requests.delete(base_url+ '/' + str(posted_id))
+    if del_p_responce.status_code != SUCCESS:
+        del_errors.append("Status code is unexpected")
+    assert len(del_errors) == 0
+
+def test_final_data_comparison():
+    global list_of_updated_ids
+    list_of_updated_ids = []
+    a = list_of_existing_ids
+    get_p_responce = requests.get(base_url)
+    json_to_operate = get_p_responce.json()['candidates']
+    for i in json_to_operate:
+        list_of_updated_ids.append(i['id'])
+    print(len(a), len(list_of_updated_ids))
+    assert a == list_of_updated_ids
+
 
 # TODO common scenario:
 # set up with existing data check

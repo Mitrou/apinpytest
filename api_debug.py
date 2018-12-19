@@ -12,7 +12,7 @@ json_to_operate = get_p_responce.json()['candidates']
 print(json_to_operate)
 
 print(dict(json_to_operate[0]).get('id'))
-
+print(dict(json_to_operate[0]))
 for i in json_to_operate:
     fff.append(i['id'])
 #    print(i['id'])
