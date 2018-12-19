@@ -1,6 +1,7 @@
 # test_wallet_fixture_parametrized.py
 import pytest
-from wallet import Wallet, InsufficientAmount
+from other.wallet import Wallet
+
 
 @pytest.fixture
 def my_wallet():

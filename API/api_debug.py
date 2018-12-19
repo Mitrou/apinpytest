@@ -1,10 +1,5 @@
 import requests
-import pytest
-import json
-from random import choice
-import random
-import string
-from config import *
+from API.config import *
 
 get_p_responce = requests.get(url)
 status_code_to_test = get_p_responce.status_code
