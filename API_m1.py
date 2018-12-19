@@ -24,6 +24,7 @@ base_url = 'http://qainterview.cogniance.com/candidates'
 list_of_existing_ids = []
 list_of_updated_ids = []
 
+@pytest.fixture()
 def json_body_generator(arg):
     thousand_chars_str = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(10000)])
     ten_chars_spec_symbols = ''.join([random.choice(string.punctuation) for n in range(10)])
@@ -56,7 +57,12 @@ def json_body_generator(arg):
         request_body = '{"name": "value1", "position": "value1", "key3": "value3"}'
     return request_body
 
-#def check_get_all_and_existing_data():
+@pytest.fixture()
+def check_get_all_and_existing_data():
+    get_p_responce = requests.get(base_url)
+    json_to_operate = get_p_responce.json()['candidates']
+    for i in json_to_operate:
+        list_of_existing_ids.append(i['id'])
 
 def test_data_are_valid():
     to_test = json_body_generator("POS")
@@ -65,15 +71,20 @@ def test_data_are_valid():
 def test_api_get_smoke():
     get_p_responce = requests.get(base_url)
     status_code_to_test = get_p_responce.status_code
-    json_to_operate = get_p_responce.json()['candidates']
-    for i in json_to_operate:
-        list_of_existing_ids.append(i['id'])
     assert status_code_to_test == SUCCESS
 
-def test_api_post_positive():
+def test_api_post_positive_status_code():
     positive_post_body = json_body_generator('POS')
-    requests.post('https://httpbin.org/post', data = dict(positive_post_body))
+    post_p_responce = requests.post(base_url, data = positive_post_body, headers=correct_header)
+    status_code_to_test = post_p_responce.status_code
+    json_to_operate_in_post = post_p_responce.json()['candidates']
+    posted_id = json_to_operate_in_post.get('id')
+    assert status_code_to_test == ADDED
 
+def test_api_post_positive_crosscheck_by_get():
+    get_p_responce = requests.get(base_url)
+    json_to_operate = get_p_responce.json()['candidates']
+    assert status_code_to_test == SUCCESS
 
 # TODO common scenario:
 # set up with existing data check
