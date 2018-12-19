@@ -107,6 +107,29 @@ def test_delete_pos_status_code():
         del_errors.append("Status code is unexpected")
     assert len(del_errors) == 0
 
+def test_10_posts_10_deletes():
+    ids_posted = []
+    ids_left_after_delete = []
+    ten_posts_dels_errors = []
+    a = list_of_existing_ids
+    for i in range(10):
+        positive_post_body = json_body_generator('POS')
+        post_p_ten_posts_test = requests.post(base_url, data=positive_post_body, headers=correct_header)
+        ten_posts_test_json = post_p_ten_posts_test.json()['candidate']
+        ten_posts_test_posted_id = ten_posts_test_json.get('id')
+        ids_posted.append(ten_posts_test_posted_id)
+    if len(ids_posted) != 10:
+        ten_posts_dels_errors.append('count of posts is not cool')
+    for i in ids_posted:
+        requests.delete(base_url+ '/' + str(i))
+    get_p_responce = requests.get(base_url)
+    json_to_operate = get_p_responce.json()['candidates']
+    for i in json_to_operate:
+        ids_left_after_delete.append(i['id'])
+    if a != ids_left_after_delete:
+        ten_posts_dels_errors.append('something went wrong with delete')
+    assert len(ten_posts_dels_errors) == 0
+
 def test_final_data_comparison():
     global list_of_updated_ids
     list_of_updated_ids = []
